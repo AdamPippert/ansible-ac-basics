@@ -1,0 +1,31 @@
+---
+- name: Using a REST API in Ansible
+  become: false
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars.yml
+  tasks:
+    - debug:
+        msg: "Calling OpenShift API and Automation Controller API for users on each"
+
+        #   - name: Grab existing users from OpenShift API
+        #      uri:
+        #       url: "https://api.{{ clusterurl }}:6443/users.openshift.io/v1/users"
+        #        method: GET
+        #        user: "{{ ocadminuser }}"
+        #        password: "{{ ocadminpass }}"
+        #       client_cert: server.crt
+        #       client_key: server.key
+
+    - name: Grab existing users from Automation Controller
+      uri:
+        url: "{{ controller }}/apis/v2/users"
+        method: GET
+        user: "{{ acadminuser }}"
+        password: "{{ acadminpass }}"
+      register: results
+
+    - debug:
+        var: results.json.value  
+
